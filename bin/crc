@@ -198,6 +198,9 @@ cmd_add() {
   else
     die "no repository: pass --repo <url>, --create <owner/name>, or --dir <existing git repo>"
   fi
+  # Store an absolute path: 'tick' runs from the supervisor's directory, where a relative
+  # --dir (say ".") names some other folder, and the environment id is looked up by path.
+  dir="$(cd "$dir" && pwd)" || die "cannot resolve $dir"
 
   # An empty repo has no commit, and worktree spawn needs one.
   if ! "$git" -C "$dir" rev-parse HEAD >/dev/null 2>&1; then
